@@ -6,69 +6,42 @@ namespace MeleeAI
 {
 	public class MeleeCircleAI : MonoBehaviour
 	{				
-		private int currentRequestCount = 0;
-		private int previousRequestCount = 0;
-		private float requestTime = 0f;
-		private List<Transform> attackers;
+		public int MaxAttackers = 2;
+		public float AttackRate = 2;
+		public float AttackRateFluctuationMax = 1f;
+
+		private int attackers;
+
 
 		void Start ()
 		{
-			attackers = new List<Transform> ();
+			attackers = 0;
 		}
-				
-		public float WaitTime {
-			get {
-				if (previousRequestCount < Settings.instance.RequestThresholdPerSec) {
-					return 0f;
-				}
-								
-				return GetNextAttackWaitTime ();
-			}
-		}
-				
-		void Update ()
+
+
+		public void CompletedAttack ()
 		{
-			requestTime += Time.deltaTime;
+			attackers--;
 		}
 
-
-		public bool HavePermissionToAttack (Transform attacker)
+		public bool HavePermissionToAttack ()
 		{
-			if (requestTime <= 1f) {
-				currentRequestCount++;
-			} else {
-				previousRequestCount = currentRequestCount;
-				requestTime = 0f;
-			}
-
-			if (attackers.Contains (attacker)) {
+			if(attackers >= MaxAttackers){
 				return false;
 			}
 
-			if (attackers.Count >= Settings.instance.MaxAttackers) {
-				return false;
-			}
-
-			attackers.Add (attacker);
+			attackers++;
 
 			return true;
-
 		}
 				
-		private float GetNextAttackWaitTime ()
+		public float GetNextAttackWaitTime ()
 		{
-			var fluc = Random.Range (0, Settings.instance.AttackRateFluctuationMax);
-						
-			if ((int)Random.Range (0, 2) == 0) {
-				return (Settings.instance.AttackRate - fluc);
-			} else {
-				return (Settings.instance.AttackRate + fluc);
-			}
+			var fluc = Random.Range (-AttackRateFluctuationMax, AttackRateFluctuationMax);
+
+			return (AttackRate + fluc);
 		}
 			
-		public void CompletedAttack (Transform character)
-		{
-			attackers.Remove (character);
-		}
+	
 	}
 }

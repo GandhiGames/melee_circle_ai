@@ -74,15 +74,22 @@ namespace MeleeAI
 
 		public override void Act (Transform player)
 		{
+			foreach(var action in actions){
+				var command = action.GetAction (player);
+
+				if (command != null) {
+					command.Execute ();
+				}
+			}
 					
-			var action = actions [currentAction];
+			/*var action = actions [currentAction];
 			currentAction = (currentAction + 1) % actions.Count;
 					
 			var command = action.GetAction (player);
 
 			if (command != null) {
 				command.Execute ();
-			}
+			}*/
 						
 						
 		}

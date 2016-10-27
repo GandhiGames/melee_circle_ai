@@ -38,7 +38,7 @@ namespace MeleeAI
 
 		protected bool CloseToObject (Vector2 objPos, Vector2 characterPos, float distance)
 		{
-			return Vector2.Distance (characterPos, objPos) < distance;
+			return Vector2.Distance (characterPos, objPos) < (distance + 0.1f);
 		}
 	}
 }

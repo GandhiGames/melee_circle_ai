@@ -13,7 +13,7 @@ namespace MeleeAI
 			var enemy = ObjectPool.instance.GetObjectForType (Enemy.name, true);
 			
 			if (enemy) {
-				enemy.transform.position = new Vector2 (Random.Range (1, 10), Random.Range (1, 10));
+				enemy.transform.position = new Vector2 (Random.Range (1, 20), Random.Range (1, 20));
 				enemy.SetActive (true);
 			}
 		}

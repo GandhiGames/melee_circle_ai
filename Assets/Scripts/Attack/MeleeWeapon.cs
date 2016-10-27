@@ -8,6 +8,7 @@ namespace MeleeAI
 	/// Attach to any melee weapon in the game. 
 	/// Provides commands for when the base weapon collides with other objects. 
 	/// </summary>
+	[RequireComponent(typeof(AudioSource))]
 	public class MeleeWeapon : Weapon
 	{
 
@@ -15,8 +16,9 @@ namespace MeleeAI
 		public AudioClip[] HitSounds;
 		public Transform ImpactAnimation;
 			
-
 		private static readonly string SCRIPT_NAME = typeof(MeleeWeapon).Name;
+
+		private AudioSource audioSource;
 
 		/// <summary>
 		/// Checks prefab is correctly initialised (not null and with a tag name). If not alerts user.
@@ -28,12 +30,13 @@ namespace MeleeAI
 					"Damage will be applied to any object with same tag so make sure it is set correctly");
 			}
 
+			audioSource = GetComponent<AudioSource> ();
 		}
 
 		void OnEnable ()
 		{						
 			if (SwingSounds != null && SwingSounds.Length > 0) {
-				GetComponent<AudioSource>().PlayOneShot (SwingSounds [(int)Random.Range (0, SwingSounds.Length)]);
+				audioSource.PlayOneShot (SwingSounds [(int)Random.Range (0, SwingSounds.Length)]);
 			}
 		}
 
@@ -50,7 +53,7 @@ namespace MeleeAI
 			if (IsDamageTag (other)) {
 		
 				if (HitSounds != null && HitSounds.Length > 0) {
-					GetComponent<AudioSource>().PlayOneShot (HitSounds [(int)Random.Range (0, HitSounds.Length)]);
+					audioSource.PlayOneShot (HitSounds [(int)Random.Range (0, HitSounds.Length)]);
 				}
 
 				var heading = other.transform.position - transform.position;

@@ -13,8 +13,6 @@ namespace MeleeAI
 		public GameObject WeaponPrefab;
 
 		private static readonly string SCRIPT_NAME = typeof(MeleeAttack).Name;
-		// Instantiated weapon.
-		private GameObject melee;
 
 		private Vector2? heading;
 		private float range;
@@ -59,11 +57,6 @@ namespace MeleeAI
 		void Update ()
 		{
 			attackTime += Time.deltaTime;
-
-			if (melee && heading.HasValue) {
-				melee.transform.position = (Vector2)transform.position + heading.Value;
-				melee.transform.transform.up = heading.Value;
-			}
 		}
 
 		/// <summary>
@@ -74,12 +67,14 @@ namespace MeleeAI
 		private void Instantiate (Vector2 dir)
 		{
 			dir.Normalize ();
-			melee = ObjectPool.instance.GetObjectForType (WeaponPrefab.name, false);
-			melee.transform.position = transform.position;
-		
+			var melee = ObjectPool.instance.GetObjectForType (WeaponPrefab.name, false);
+	
+			melee.transform.SetParent (transform);
 				
 			//Limit the melee weapons range
 			heading = new Vector2 (Mathf.Clamp (dir.x, -range, range), Mathf.Clamp (dir.y, -range, range));
+			melee.transform.up = heading.Value;
+			melee.transform.position = transform.position + melee.transform.up;
 
 			melee.SetActive (true);
 

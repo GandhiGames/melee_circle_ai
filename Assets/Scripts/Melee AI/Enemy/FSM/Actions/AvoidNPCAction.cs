@@ -14,7 +14,7 @@ namespace MeleeAI
 		private float forceMultiplier;
 		private string avoidTag;
 		//Increases the strength of the force - lower numbers equals a stronger force
-		private static readonly float MAG_OFFSET = 0.02f;
+		private static readonly float MAG_OFFSET = 0.08f;
 		
 		public AvoidNPCAction (Transform character, float avoidanceRange, string avoidTag, float forceMultiplier = 2f)
 		{
@@ -34,7 +34,6 @@ namespace MeleeAI
 			
 			foreach (var obj in entities) {			
 
-					
 				float to = (obj.transform.position - character.transform.position).sqrMagnitude;
 					
 				if (!obj.transform.Equals (character.transform) && to <= (avoidanceRange * avoidanceRange)) {

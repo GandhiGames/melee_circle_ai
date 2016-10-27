@@ -37,7 +37,7 @@ namespace MeleeAI
 			
 			var stateInfo = animator.GetCurrentAnimatorStateInfo (0);
 			
-			spawning = stateInfo.nameHash == Animator.StringToHash ("Base Layer.Spawn");
+			spawning = stateInfo.fullPathHash == Animator.StringToHash ("Base Layer.Spawn");
 			
 			return spawning;
 		}

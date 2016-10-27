@@ -20,6 +20,9 @@ namespace MeleeAI
 	public class MeleeController2D : NPC
 	{				
 		public LayerMask ObstacleMask;
+		public float OutsideCircleRange = 5f;
+		public float InsideCircleRange = 1.6f;
+		public float SeperationRange = 2f;
 
 		/// <summary>
 		/// Construct a state mahcine to provide the behaviour outlined in the class comment.
@@ -30,26 +33,25 @@ namespace MeleeAI
 		/// </summary>
 		protected override void ConstructFSM ()
 		{
-			var outsideCircleRange = Settings.instance.OutsideCircleRange;
-			var insideCircleRange = Settings.instance.InsideCircleRange;
-			var seperationRange = Settings.instance.SeperationRange;
+
+			var rigidbody = GetComponent<Rigidbody2D> ();
 						
 			// Move into danger zone
 			var seekDangerZoneActions = new List<FSMAction> ();
-			seekDangerZoneActions.Add (new SeekDistanceFromPlayer2D (transform, SeekSpeed, outsideCircleRange, GetComponent<Rigidbody2D>()));
-			seekDangerZoneActions.Add (new AvoidNPCAction (transform, seperationRange, transform.tag));
+			seekDangerZoneActions.Add (new SeekDistanceFromPlayer2D (transform, SeekSpeed, OutsideCircleRange, rigidbody));
+			seekDangerZoneActions.Add (new AvoidNPCAction (transform, SeperationRange, transform.tag));
 			var dangerReasons = new List<FSMReason> ();
 			dangerReasons.Add (new PermissionToAttackReason (transform, FSMStateID.BattleCircleAI_SeekToAttackZone));
 			stateMachine.AddState (new State (FSMStateID.BattleCircleAI_SeekToDangerZone, seekDangerZoneActions, dangerReasons));
 						
 			// Avoid other characters and move into attack range.
 			var seekAttackZoneActions = new List<FSMAction> ();
-			seekAttackZoneActions.Add (new AvoidNPCAction (transform, seperationRange, transform.tag));
-			seekAttackZoneActions.Add (new SeekDistanceFromPlayer2D (transform, SeekSpeed, insideCircleRange, GetComponent<Rigidbody2D>()));
+			seekAttackZoneActions.Add (new AvoidNPCAction (transform, SeperationRange, transform.tag));
+			seekAttackZoneActions.Add (new SeekDistanceFromPlayer2D (transform, SeekSpeed, InsideCircleRange, rigidbody));
 			seekAttackZoneActions.Add (new InformMeleeAIOnExitAction (transform));
 			var seekAttackZoneReasons = new List<FSMReason> ();
 			seekAttackZoneReasons.Add (new NoClearPathToPlayerReason (transform, ObstacleMask, GetComponent<Collider2D>(), FSMStateID.BattleCircleAI_SeekToDangerZone));
-			seekAttackZoneReasons.Add (new PlayerInRangeReason (transform, insideCircleRange, FSMStateID.MeleeAttack));
+			seekAttackZoneReasons.Add (new PlayerInRangeReason (transform, InsideCircleRange, FSMStateID.MeleeAttack));
 			stateMachine.AddState (new State (FSMStateID.BattleCircleAI_SeekToAttackZone, seekAttackZoneActions, seekAttackZoneReasons));
 						
 			var meleeAttackActions = new List<FSMAction> ();
@@ -60,7 +62,6 @@ namespace MeleeAI
 			meleeAttackReasons.Add (new AttackCompleteReason (transform, singleAttack, 
 													FSMStateID.BattleCircleAI_SeekToDangerZone));
 			stateMachine.AddState (new State (FSMStateID.MeleeAttack, meleeAttackActions, meleeAttackReasons)); 
-
 
 		}
 

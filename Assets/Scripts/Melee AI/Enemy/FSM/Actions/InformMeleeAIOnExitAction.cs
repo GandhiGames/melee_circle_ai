@@ -42,7 +42,7 @@ namespace MeleeAI
 				}
 			}
 			
-			meleeAI.CompletedAttack (character);
+			meleeAI.CompletedAttack ();
 		}
 	}
 }

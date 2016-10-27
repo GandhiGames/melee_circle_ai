@@ -26,14 +26,13 @@ namespace MeleeAI
 
 		public override bool ChangeState (Transform player)
 		{
-				
 			currentWaitTime += Time.deltaTime;
 				
 			if (!circleAI) {
 				circleAI = player.GetComponent<MeleeCircleAI> ();
 			}
 				
-			if (OkToAct () && circleAI.HavePermissionToAttack (character)) { 
+			if (OkToAct () && circleAI.HavePermissionToAttack ()) { 
 				Debug.Log (SCRIPT_NAME + ": switching state to: " + GoToState);
 				controller.SetTransistion (Transition);
 				return true;
@@ -47,7 +46,7 @@ namespace MeleeAI
 			currentWaitTime = 0f;
 						
 			if (circleAI) {
-				nextWaitTime = circleAI.WaitTime;
+				nextWaitTime = circleAI.GetNextAttackWaitTime ();
 			} else {
 				nextWaitTime = 0f;
 			}
@@ -58,7 +57,7 @@ namespace MeleeAI
 		{
 				
 			if (currentWaitTime >= nextWaitTime) {						
-				nextWaitTime = circleAI.WaitTime;
+				nextWaitTime = circleAI.GetNextAttackWaitTime ();
 				return true;
 			}
 			 

@@ -18,9 +18,7 @@ namespace MeleeAI
 		{
 			if (OkToAct ()) {
 				
-				Vector2 newPos = //Lenard_Jones (character.position, player.position, lenardJonesVector, distanceFromPlayer);
-
-						(character.position - player.position).normalized * distanceFromPlayer + player.position;
+				Vector2 newPos = (character.position - player.position).normalized * distanceFromPlayer + player.position;
 
 				if (Vector2.Distance (newPos, character.position) > 0.1f) {
 					return new Movement2DCommand (character, ((Vector3)newPos - character.position).normalized * seekSpeed, rigidbody);
