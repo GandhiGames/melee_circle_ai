@@ -9,7 +9,6 @@ namespace MeleeAI
 
 		private List<FSMAction> actions;
 		private List<FSMReason> reasons;
-		private int currentAction = 0;
 
 		public State (FSMStateID stateid, FSMAction action, List<FSMReason> reasons)
 		{
@@ -40,7 +39,6 @@ namespace MeleeAI
 
 		public override void Enter ()
 		{
-			currentAction = 0;
 
 			foreach (var action in actions) {
 				action.Enter ();
